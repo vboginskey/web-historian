@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var http = require('http-request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -10,8 +11,8 @@ var _ = require('underscore');
  */
 
 exports.paths = {
-  'siteAssets' : path.join(__dirname, '../web/public'),
-  'archivedSites' : path.join(__dirname, '../archives/sites'),
+  'siteAssets' : path.join(__dirname, '../web/public/'),
+  'archivedSites' : path.join(__dirname, '../archives/sites/'),
   'list' : path.join(__dirname, '../archives/sites.txt')
 };
 
@@ -25,17 +26,40 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(){
+exports.readListOfUrls = function(callback){
+  fs.readFile(exports.paths.list, 'utf8', function(err, data){
+    if (err) { console.error("Unable to read URL list.\n", err); }
+    callback(data.split('\n'));
+  });
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url, callback){
+  exports.readListOfUrls(function (urls) {
+    callback(urls.some(function(listUrl) {
+      if (listUrl === url) { return true; }
+    }))
+  });
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url){
+  if(url) {
+    fs.appendFile(exports.paths.list, url + '\n', function(err) {
+      if (err) { console.error("Unable to add URL to list\n", err); }
+    });
+  }
 };
 
-exports.isURLArchived = function(){
+exports.isUrlArchived = function(url, callback){
+  fs.exists(exports.paths.archivedSites + url, callback);
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrl = function(url){
+  http.get({url: url}, exports.paths.archivedSites + url, function(err, res) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    console.log(res.code, res.file);
+  });
 };
