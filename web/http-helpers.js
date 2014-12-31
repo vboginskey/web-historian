@@ -17,7 +17,7 @@ exports.getPostData = function(req, callback) {
   });
   req.on('end', function(){
     callback(data);
-  })
+  });
 };
 
 exports.redirect = function(res, toUrl) {

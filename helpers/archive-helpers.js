@@ -26,7 +26,7 @@ exports.isUrlInList = function(url, callback){
   exports.readListOfUrls(function (urls) {
     callback(urls.some(function(listUrl) {
       if (listUrl === url) { return true; }
-    }))
+    }));
   });
 };
 

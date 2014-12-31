@@ -5,8 +5,8 @@ archive.readListOfUrls(function (urls) {
   urls.forEach(function (url) {
     archive.isUrlArchived(url, function (archived) {
       if (!archived) { archive.downloadUrl(url); }
-    })
-  })
+    });
+  });
 });
 
-console.info("fetcher run successful.")
+console.info("fetcher run successful.");

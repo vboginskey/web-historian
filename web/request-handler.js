@@ -6,7 +6,7 @@ var http = require('./http-helpers');
 
 var methods = {
   'GET': function(req, res, pathname) {
-    if (pathname === '/') { pathname = 'index.html' }
+    if (pathname === '/') { pathname = 'index.html'; }
     http.serveAssets(res, pathname);
   },
   'POST': function(req, res) {
@@ -20,7 +20,7 @@ var methods = {
             } else {
               http.redirect(res, 'loading.html');
             }
-          })
+          });
         } else {
           archive.addUrlToList(parsedData.url);
           http.redirect(res, 'loading.html');
@@ -33,7 +33,7 @@ var methods = {
 exports.handleRequest = function (req, res) {
   var parsedUrl = url.parse(req.url);
 
-  methods[req.method](req, res, parsedUrl.pathname)
+  methods[req.method](req, res, parsedUrl.pathname);
 
 
   // res.end(archive.paths.list);
